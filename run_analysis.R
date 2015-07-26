@@ -39,8 +39,8 @@ X<-rbind(X_test,X_train)
 Y<-rbind(Y_test,Y_train)
 
 #step2
-Means<-rowMeans(X)
-std<-apply(X,1,sd)
+Means<-colMeans(X)
+std<-apply(X,2,sd)
 
 #step3
 labels<-read.table("./UCI HAR Dataset/activity_labels.txt")
