@@ -1,3 +1,5 @@
+## run_analysis.R transforms UCI HAR Dataset into the required dataset
+
 ## Create working dir
 #if(!dir.exists("./getdata"))
 #  dir.create("getdata")
@@ -27,8 +29,9 @@ Y<-rbind(Y_test,Y_train)
 
 ## step2: Extract measurements on mean and standard deviation
 features<-read.table("./UCI HAR Dataset/features.txt")
-m<-grepl("mean()",as.character(features[,2]),fixed=T)
-s<-grepl("std()",as.character(features[,2]),fixed=T)
+fvec<-as.vector(features[,2])
+m<-grepl("mean()",fvec,fixed=T)
+s<-grepl("std()",fvec,fixed=T)
 ind<-m|s
 X_ext<-X[,ind]
 
@@ -37,8 +40,6 @@ labels<-read.table("./UCI HAR Dataset/activity_labels.txt")
 Y<-data.frame(as.character(labels[Y[1:dim(Y)[1],1],2]),stringsAsFactors = F)
 
 ## step4: Label the data set with descriptive variable names
-features<-read.table("./UCI HAR Dataset/features.txt")
-fvec<-as.vector(features[,2])
 nam<-fvec[ind]
 nam<-gsub("Body","B",nam)
 nam<-gsub("Gravity","G",nam)
@@ -75,4 +76,5 @@ write.table(tidy_data,"./tidy_data.txt",row.names = F)
 ## Code for CodeBook.md
 #install.packages("gdata")
 #library(gdata)
-#write.fwf(data.frame(nam,fvec[ind]),"./CodeBook.md",colnames = F)
+#library(plyr)
+#write.fwf(arrange(data.frame(nam,fvec[ind],rep("[-1,1]",dim(tidy_data)[2]-2)),nam),"./CodeBook.md",colnames = F,sep="     ")
